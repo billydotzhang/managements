@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
-  getAdminInfo
+  loginInfo
 } from '@/api/getData'
 
 Vue.use(Vuex)
@@ -23,7 +23,8 @@ const actions = {
     commit
   }) {
     try {
-      const res = await getAdminInfo()
+      const res = await loginInfo()
+      console.log(res)
       if (res.status == 200) {
         commit('saveAdminInfo', res.data);
       } else {

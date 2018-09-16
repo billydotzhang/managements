@@ -12,14 +12,16 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://47.93.118.135:9090/',
+        // target: 'http://liangzhunglobal.com',
+        // target: 'http://192.168.199.126:9090/',
+        target: 'http://101.200.152.192:9090',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'
         }
-      }
+      },
     },
-
+    // productionSourceMap: false,
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
@@ -53,12 +55,12 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../managers/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsRoot: path.resolve(__dirname, '../managers'),
+    assetsSubDirectory: 'asset',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

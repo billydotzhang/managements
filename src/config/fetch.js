@@ -1,11 +1,15 @@
 import {
-  baseUrl
+  ip1Conf
 } from './env'
 import QS from 'qs'
+import {
+  getStore
+} from "./mUtils"
 
 export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
   type = type.toUpperCase();
-  url = baseUrl + url;
+  url = ip1Conf + url;
+  const userToken = getStore("token")
 
   if (type == 'GET') {
     let dataStr = ''; //数据拼接字符串
@@ -25,19 +29,18 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       method: type,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'JSESSIONID=' + userToken
       },
       mode: "cors",
-      cache: "force-cache"
+      cache: "no-cache"
     }
 
     if (type == 'POST') {
-
       // var formData = new FormData();
       // for (let k in data) {
       //   formData.append(k, data[k]);
       // }
-
       Object.defineProperty(requestConfig, 'body', {
         value: QS.stringify(data)
       })

@@ -17,7 +17,7 @@
             <el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
           </el-form-item>
         </el-form>
-        <p class="tip">温馨提示：</p>
+        <!-- <p class="tip">温馨提示：</p> -->
         <!-- <p class="tip">123</p>
         <p class="tip">321</p> -->
       </section>
@@ -29,7 +29,8 @@
 import { login, getAdminInfo } from "@/api/getData";
 import { mapActions, mapState } from "vuex";
 import { hexMD5 } from "../lib/md5";
-
+import { CusBASE64 } from "../lib/base64";
+import { setStore } from "../config/mUtils";
 export default {
   data() {
     return {
@@ -43,7 +44,8 @@ export default {
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
-      showLogin: false
+      showLogin: false,
+      urlTekon: ""
     };
   },
   mounted() {
@@ -66,10 +68,16 @@ export default {
           });
           console.log(res);
           if (res.status == 200) {
+            console.log(res);
             this.$message({
               type: "success",
               message: "登录成功"
             });
+            this.urlTekon = CusBASE64.encoder(
+              this.loginForm.username + ":" + res.data.token
+            );
+            console.log(this.urlTekon);
+            setStore("token", this.urlTekon);
             this.$router.push("manage");
           } else {
             this.$message({

@@ -8,6 +8,7 @@ const manage = r => require.ensure([], () => r(require('@/page/manage')), 'manag
 const userList = r => require.ensure([], () => r(require('@/page/userList')), 'userList');
 const serviceList = r => require.ensure([], () => r(require('@/page/serviceList')), 'serviceList');
 const pregnancyEcharts = r => require.ensure([], () => r(require('@/page/pregnancyEcharts')), 'pregnancyEcharts');
+const test = r => require.ensure([], () => r(require('@/page/test')), 'test');
 
 export default new Router({
   routes: [{
@@ -30,6 +31,11 @@ export default new Router({
       {
         path: '/pregnancyEcharts',
         component: pregnancyEcharts,
+        meta: ['数据管理', '图标']
+      },
+      {
+        path: '/test',
+        component: test,
         meta: ['数据管理', '图标']
       }
     ]

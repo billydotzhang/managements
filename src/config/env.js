@@ -6,24 +6,26 @@
  * baseImgPath: 图片存放地址
  *
  */
-let baseUrl = '';
-let routerMode = 'hash';
+// let baseUrl = '';
+// let routerMode = 'hash';
 let baseImgPath;
 let ip1Conf = '';
+let ip2Conf = '';
 
 if (process.env.NODE_ENV == 'development') {
-  baseUrl = '';
+  // baseUrl = '';
   baseImgPath = '/img/';
-  ip1Conf = 'api';
+  ip1Conf = 'api/manager';
 } else {
-  baseUrl = '//elm.cangdu.org';
-  baseImgPath = '//elm.cangdu.org/img/';
-  ip1Conf = '';
+  // baseUrl = '//elm.cangdu.org';
+  baseImgPath = '';
+  ip1Conf = '/manager';
 }
 
 export {
-  baseUrl,
-  routerMode,
+  // baseUrl,
+  // routerMode,
   baseImgPath,
-  ip1Conf
+  ip1Conf,
+  ip2Conf
 }

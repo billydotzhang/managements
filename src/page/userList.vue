@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="table_container">
-      <el-table :data="tableData" highlight-current-row style="width: 100%">
+      <el-table v-loading="tableloading" :data="tableData" highlight-current-row style="width: 100%">
         <el-table-column property="id" label="id">
         </el-table-column>
         <el-table-column property="nickName" label="用户昵称">
@@ -83,7 +83,8 @@ export default {
       limit: 20,
       currentPage: 1,
       searchInpt: "",
-      searchLoading: false
+      searchLoading: false,
+      tableloading: false
     };
   },
   components: {
@@ -183,7 +184,6 @@ export default {
         });
     },
     goGraph(data) {
-      console.log(data.id);
       this.$router.push({
         path: "pregnancyEcharts",
         query: { userId: data.id }
