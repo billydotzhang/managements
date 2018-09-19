@@ -3,10 +3,14 @@
     <head-top></head-top>
     <div class="search_box">
       <div class="search_box_1">
-        <!-- <el-input v-model="searchInpt" placeholder="请输入内容"></el-input>
-        <el-button type="primary" @click="searchUser()" icon="el-icon-search" :loading="searchLoading" plain>搜索</el-button> -->
+        <el-input v-model="searchInpt" placeholder="请输入内容"></el-input>
+        <el-button type="primary" @click="searchUser()" icon="el-icon-search" :loading="searchLoading" plain>搜索</el-button>
       </div>
       <div class="search_box_1">
+        <el-select v-model="thousandPlanStatusValue" placeholder="请选择" @change="changeThousandPlanStatusValue()" clearable>
+          <el-option v-for="item in thousandPlanStatus" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
       </div>
       <div class="search_box_1">
       </div>
@@ -23,16 +27,19 @@
         </el-table-column>
         <el-table-column property="detectionTime" :formatter="formatterTime" label="最后检测时间" width="200" align="center">
         </el-table-column>
-        <el-table-column property="prePregnant" label="客服操作" align="center">
+        <el-table-column label="客服操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="customerHandle(scope.row)" type="success" size="small" v-if="scope.row.customerServiceHandle == '0' ">是</el-button>
-            <el-button @click="customerHandle(scope.row)" type="danger" size="small" v-else>否</el-button>
+            <el-button @click="customerHandle(scope.row)" type="primary" size="small" v-if="scope.row.customerServiceHandle == '0' ">未操作</el-button>
+            <el-button @click="customerHandle(scope.row)" type="success" size="small" v-else-if="scope.row.customerServiceHandle == '1'">无异常</el-button>
+            <el-button @click="customerHandle(scope.row)" type="danger" size="small" v-else-if="scope.row.customerServiceHandle == '2'">已电话</el-button>
+            <el-button @click="customerHandle(scope.row)" type="danger" size="small" v-else-if="scope.row.customerServiceHandle == '3'">已app</el-button>
+            <el-button @click="customerHandle(scope.row)" type="danger" size="small" v-else-if="scope.row.customerServiceHandle == '4'">已短信</el-button>
           </template>
         </el-table-column>
-        <el-table-column property="prePregnant" label="千人计划" align="center">
+        <el-table-column prop="thousandPlan" label="千人计划" align="center">
           <template slot-scope="scope">
-            <el-button @click="planStatus(scope.row)" type="success" size="small" v-if="scope.row.status == '0'">是</el-button>
-            <el-button @click="planStatus(scope.row)" type="danger" size="small" v-else>否</el-button>
+            <el-button @click="planStatus(scope.row)" type="danger" size="small" v-if="scope.row.status == '0'">取消</el-button>
+            <el-button @click="planStatus(scope.row)" type="success" size="small" v-else>参加</el-button>
           </template>
         </el-table-column>
         <el-table-column property="city" label="操作" align="center">
@@ -56,6 +63,32 @@
         </el-pagination>
       </div>
     </div>
+
+    <el-dialog title="修改状态" :visible.sync="customerHandleDialog" width="40%" center>
+      <p>
+        <el-radio v-model="customerHandleRadio" label="1">无异常</el-radio>
+      </p>
+      <p>
+        <el-radio v-model="customerHandleRadio" label="5">未操作</el-radio>
+      </p>
+      <p v-show="customerHandleDialogData.status =='0'">
+        <el-radio v-model="customerHandleRadio" label="2">已电话通知</el-radio>
+      </p>
+      <div v-show="customerHandleDialogData.status =='1'">
+        <p>
+          <el-radio v-model="customerHandleRadio" label="3">已APP消息推送通知</el-radio>
+        </p>
+        <p>
+          <el-radio v-model="customerHandleRadio" label="4">已短信通知</el-radio>
+        </p>
+
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="customerHandleDialog = false">取 消</el-button>
+        <el-button type="primary" @click="doCustomerHandleRadio">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -66,7 +99,8 @@ import {
   delMac,
   searchUser,
   thousandPlanStatus,
-  customerStatus
+  customerStatus,
+  customerFind
 } from "@/api/getData";
 import { ip1Conf } from "@/config/env";
 import { formatDateTime } from "@/util/common";
@@ -99,7 +133,21 @@ export default {
       currentPage: 1,
       searchInpt: "",
       searchLoading: false,
-      tableloading: true
+      tableloading: true,
+      thousandPlanStatus: [
+        {
+          value: "0",
+          label: "已参加"
+        },
+        {
+          value: "1",
+          label: "未参加"
+        }
+      ],
+      thousandPlanStatusValue: "0",
+      customerHandleDialog: false,
+      customerHandleRadio: "1",
+      customerHandleDialogData: ""
     };
   },
   components: {
@@ -121,7 +169,8 @@ export default {
       this.tableloading = true;
       const Users = await getUnusualInfo({
         pageSize: this.limit,
-        pageNo: this.offset
+        pageNo: this.offset,
+        thousandPlanStatus: this.thousandPlanStatusValue
       });
       this.tableloading = false;
       this.tableData = [];
@@ -143,21 +192,21 @@ export default {
     download(data) {
       location.href = ip1Conf + "/users/excel?userId=" + e.id;
     },
-    async customerHandleData(data) {
-      let customer;
-      if (data.customerServiceHandle == 0) {
-        customer = 1;
+    async customerHandleData() {
+      let radioStatus = "";
+      if (this.customerHandleRadio == "5") {
+        radioStatus = "0";
       } else {
-        customer = 0;
+        radioStatus = this.customerHandleRadio;
       }
       const res = await customerStatus({
-        physiologicalDataId: data.physiologicalDataId,
-        customerStatus: customer
+        physiologicalDataId: this.customerHandleDialogData.physiologicalDataId,
+        customerStatus: radioStatus
       });
       if (res.status == 200) {
         this.$message({
           type: "success",
-          message: "操作成功!"
+          message: "修改成功"
         });
         this.getUnusualInfo();
       } else {
@@ -168,20 +217,14 @@ export default {
       }
     },
     customerHandle(data) {
-      this.$confirm("是否操作?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.customerHandleData(data);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
+      console.log(data);
+      this.customerHandleRadio = data.customerServiceHandle;
+      this.customerHandleDialogData = data;
+      this.customerHandleDialog = true;
+    },
+    doCustomerHandleRadio() {
+      this.customerHandleDialog = false;
+      this.customerHandleData();
     },
     async planStatusData(data) {
       let statusData;
@@ -209,7 +252,7 @@ export default {
       }
     },
     planStatus(data) {
-      this.$confirm("修改, 是否继续?", "提示", {
+      this.$confirm("确认将此用户改为未参加千人计划状态？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -220,7 +263,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消修改"
+            message: "已取消"
           });
         });
     },
@@ -232,11 +275,42 @@ export default {
     },
     formatterTime(row) {
       return formatDateTime(row.detectionTime);
-    }
-  },
-  watch: {
-    tableData: function() {
-      // this.getUnusualInfo();
+    },
+    thousandStatus(value, row) {
+      console.log(value);
+      console.log(row.status);
+      return row.status == value;
+    },
+    async searchUser() {
+      this.searchLoading = true;
+      this.tableloading = true;
+      const searchUserInfo = await customerFind({
+        pageSize: this.limit,
+        pageNo: this.offset,
+        key: this.searchInpt
+      });
+      this.searchLoading = false;
+      this.tableloading = false;
+      this.tableData = [];
+      this.count = searchUserInfo.total;
+      if (searchUserInfo.ovulationTimeManualHandlingDos) {
+        searchUserInfo.ovulationTimeManualHandlingDos.forEach(item => {
+          const tableData = {};
+          tableData.userId = item.userId;
+          tableData.userName = item.userName;
+          tableData.nickName = item.nickName;
+          tableData.detectionTime = item.detectionTime;
+          tableData.prePregnant = item.prePregnant;
+          tableData.count = item.count;
+          tableData.physiologicalDataId = item.physiologicalDataId;
+          tableData.status = item.status;
+          tableData.customerServiceHandle = item.customerServiceHandle;
+          this.tableData.push(tableData);
+        });
+      }
+    },
+    changeThousandPlanStatusValue() {
+      this.getUnusualInfo();
     }
   }
 };
@@ -255,5 +329,6 @@ export default {
 .search_box_1 {
   display: flex;
   flex: 1;
+  padding: 0 10px;
 }
 </style>

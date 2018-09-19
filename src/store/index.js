@@ -14,6 +14,7 @@ const state = {
 
 const mutations = {
   saveAdminInfo(state, adminInfo) {
+    console.log(state)
     state.adminInfo = adminInfo;
   }
 }
@@ -24,7 +25,6 @@ const actions = {
   }) {
     try {
       const res = await loginInfo()
-      console.log(res)
       if (res.status == 200) {
         commit('saveAdminInfo', res.data);
       } else {

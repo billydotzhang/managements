@@ -4,7 +4,7 @@
     <el-row :gutter="20" style="padding:20px;">
       <el-col :span="12" style="display:flex;align-items:center;">
         <el-tooltip class="item" effect="dark" content="周期选择" placement="top">
-          <el-date-picker v-model="selectDate" :blur="changeData()" type="daterange" align="right" value-format="yyyy-MM-dd" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+          <el-date-picker v-model="selectDate" @change="changeData()" type="daterange" align="right" value-format="yyyy-MM-dd" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
           </el-date-picker>
         </el-tooltip>
       </el-col>
@@ -183,8 +183,17 @@ export default {
       routeUserID: "",
       //排卵期
       ovulate: "",
-      start: "",
-      end: ""
+
+      // -------图表参数-------
+      //白天参数
+      day_filter: [],
+      //处理值
+      processing_values: [],
+      //用户信息
+      user: "",
+      ovulationDate2: [],
+      source: [],
+      option: {}
     };
   },
   components: {
@@ -277,7 +286,9 @@ export default {
     submit() {
       this.advanced();
     },
-    changeData() {},
+    changeData() {
+      this.advanced();
+    },
     pageNext(p) {
       if (p == 1) {
         this.routeUserID = Number(this.routeUserID) - 1;
@@ -290,15 +301,14 @@ export default {
         query: { userId: this.routeUserID }
       });
     }
+  },
+  watch: {
+    $route(to, from) {
+      if (this.routeUserID) {
+        this.$router.go(0);
+      }
+    }
   }
-  // watch: {
-  //   $route(to, from) {
-  //     if (this.routeUserID) {
-  //       console.log("123");
-  //       this.$router.go(0);
-  //     }
-  //   }
-  // }
 };
 </script>
 

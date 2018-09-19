@@ -66,9 +66,7 @@ export default {
             username: this.loginForm.username,
             password: hexMD5(this.loginForm.password)
           });
-          console.log(res);
           if (res.status == 200) {
-            console.log(res);
             this.$message({
               type: "success",
               message: "登录成功"
@@ -76,9 +74,8 @@ export default {
             this.urlTekon = CusBASE64.encoder(
               this.loginForm.username + ":" + res.data.token
             );
-            console.log(this.urlTekon);
             setStore("token", this.urlTekon);
-            this.$router.push("manage");
+            this.$router.push("userList");
           } else {
             this.$message({
               type: "error",

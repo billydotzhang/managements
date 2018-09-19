@@ -17,7 +17,14 @@ export const loginInfo = () => fetch('/users/remark/info/self')
  * 获取用户列表
  */
 
-export const getUserList = data => fetch('/users/find', data);
+export const searchUser = data => fetch('/users/find', data);
+
+/**
+ * 用户列表搜索
+ */
+
+export const getUserList = data => fetch('/users/list', data);
+
 
 /**
  * 退出
@@ -43,11 +50,6 @@ export const getUnusualInfo = data => fetch('/customerService/list', data);
 
 export const delMac = data => fetch('/users/' + data.userId + '/hardwareEquipment');
 
-/**
- * 用户列表搜索
- */
-
-export const searchUser = data => fetch('/users/physiologicals/list', data);
 
 
 /**
@@ -81,10 +83,17 @@ export const vipDataQuery = data => fetch('/users/peak/addVip2/query', data);
 export const thousandPlanStatus = data => fetch('/customerService/update/thousandPlanStatus', data, "POST");
 
 /**
- * 是否加入千人计划
+ * 客服是否操作
  */
 
 export const customerStatus = data => fetch('/customerService/update/customerStatus', data, "POST");
+
+
+/**
+ * 异常数据搜索
+ */
+
+export const customerFind = data => fetch('/customerService/find', data);
 
 
 

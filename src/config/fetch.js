@@ -30,7 +30,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'JSESSIONID=' + userToken
+        'Authorization': userToken
       },
       mode: "cors",
       cache: "no-cache"

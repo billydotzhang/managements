@@ -83,10 +83,10 @@ export default {
                 echarts.format.formatTime("yyyy-MM-dd", params[0].value[0]) +
                   " " +
                   echarts.format.formatTime("hh:mm", params[0].value[0]),
+                "【佑蜜值】" + params[0].value[4],
                 "【处理值】" + params[0].value[1],
                 "【VIP参数】" + params[0].value[2],
                 "【非例假期天数】" + params[0].value[3],
-                "【佑蜜值】" + params[0].value[4],
                 "【递进方差值】" + params[0].value[5]
               ].join("<br>");
             } else if (params[0].value[4] !== null) {
@@ -730,6 +730,7 @@ export default {
 
         x_time = formatDateTime(x_time);
         x_ago_time = formatDate(x_ago_time);
+
         this.myChart.hideLoading();
         this.myChart.clear();
         this.myChart.setOption(this.option);
@@ -812,6 +813,7 @@ export default {
             }
           ]
         });
+        //半年
         const dataLength = getDays(begin_date, end_date).split(",").length;
         if (dataLength >= 180) {
           this.myChart.setOption({
@@ -843,16 +845,16 @@ export default {
                     position: "top"
                   }
                 }
-              },
-              {
-                name: "晚上曲线",
-                label: {
-                  normal: {
-                    show: false,
-                    position: "top"
-                  }
-                }
               }
+              // {
+              //   name: "晚上曲线",
+              //   label: {
+              //     normal: {
+              //       show: false,
+              //       position: "top"
+              //     }
+              //   }
+              // }
             ]
           });
         } else {

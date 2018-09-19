@@ -32,6 +32,9 @@ export default {
       }
     };
   },
+  mounted() {
+    this.selectDate = ["2018-9-9", "2018-9-10"];
+  },
   methods: {
     changeData: function() {
       console.log("123");

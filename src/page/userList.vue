@@ -103,12 +103,14 @@ export default {
       this.getUsers();
     },
     async getUsers() {
+      this.tableloading = true;
       const Users = await getUserList({
         pageSize: this.limit,
         pageNo: this.offset
       });
       this.tableData = [];
       this.count = Users.total;
+      this.tableloading = false;
       Users.dtos.forEach(item => {
         const tableData = {};
         tableData.id = item.id;
@@ -194,26 +196,30 @@ export default {
     },
     async searchUser() {
       this.searchLoading = true;
-      const Users = await searchUser({
+      this.tableloading = true;
+      const searchUserInfo = await searchUser({
         pageSize: this.limit,
         pageNo: this.offset,
         key: this.searchInpt
       });
       this.searchLoading = false;
       this.tableData = [];
-      this.count = Users.total;
-      if (Users.total > 0) {
-        const tableData = {};
-        tableData.id = item.id;
-        tableData.userName = item.userName;
-        tableData.nickName = item.nickName;
-        tableData.hardwareEquipment = item.hardwareEquipment;
-        tableData.bindingTime = item.bindingTime;
-        tableData.detectionHeadChangeTime = item.detectionHeadChangeTime;
-        tableData.prePregnant = item.prePregnant;
-        tableData.count = item.count;
-        tableData.pregnantInfo = true;
-        this.tableData.push(tableData);
+      this.count = searchUserInfo.total;
+      this.tableloading = false;
+      if (searchUserInfo.total > 0) {
+        searchUserInfo.dtos.forEach(item => {
+          const tableData = {};
+          tableData.id = item.id;
+          tableData.userName = item.userName;
+          tableData.nickName = item.nickName;
+          tableData.hardwareEquipment = item.hardwareEquipment;
+          tableData.bindingTime = item.bindingTime;
+          tableData.detectionHeadChangeTime = item.detectionHeadChangeTime;
+          tableData.prePregnant = item.prePregnant;
+          tableData.count = item.count;
+          tableData.pregnantInfo = true;
+          this.tableData.push(tableData);
+        });
       } else {
         this.$message({
           type: "info",

@@ -12,6 +12,7 @@
       <!-- <img :src="baseImgPath + adminInfo.avatar" class="avator"> -->
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="home">首页</el-dropdown-item>
+        <el-dropdown-item command="changePassword">修改密码</el-dropdown-item>
         <el-dropdown-item command="singout">退出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -50,6 +51,8 @@ export default {
             message: "退出成功"
           });
           this.$router.push("/");
+        } else if (command == "changePassword") {
+          this.$router.push("/changePassword");
         } else {
           this.$message({
             type: "error",
