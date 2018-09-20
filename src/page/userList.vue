@@ -126,24 +126,25 @@ export default {
       });
     },
     download(data) {
-      location.href = ip1Conf + "/users/excel?userId=" + e.id;
+      location.href = ip1Conf + "/users/excel?userId=" + data.id;
     },
     async delMac(data) {
-      // const res = await delMac({
-      //   userId: data.id
-      // });
-      // if (res.status == 200) {
-      data.hardwareEquipment = "";
-      this.$message({
-        type: "success",
-        message: "删除成功!"
+      const res = await delMac({
+        userId: data.id,
+        hardwareEquipment: data.hardwareEquipment
       });
-      // } else {
-      //   this.$message({
-      //     type: "error",
-      //     message: res.msg
-      //   });
-      // }
+      if (res.status == 200) {
+        this.getUsers();
+        this.$message({
+          type: "success",
+          message: "删除成功!"
+        });
+      } else {
+        this.$message({
+          type: "error",
+          message: res.msg
+        });
+      }
     },
     async pregnant(data) {
       data.pregnantInfo = !data.pregnantInfo;

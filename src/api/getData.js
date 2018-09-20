@@ -48,7 +48,7 @@ export const getUnusualInfo = data => fetch('/customerService/list', data);
  * 删除设备号
  */
 
-export const delMac = data => fetch('/users/' + data.userId + '/hardwareEquipment');
+export const delMac = data => fetch('/users/' + data.userId + '/hardwareEquipment', data, "POST");
 
 
 
