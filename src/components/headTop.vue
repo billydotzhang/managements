@@ -1,7 +1,7 @@
 <template>
   <div class="header_container">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item>
+      <!-- <el-breadcrumb-item :to="{ path: '/manage' }">首页</el-breadcrumb-item> -->
       <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
     <el-dropdown @command="handleCommand" menu-align='start'>
@@ -51,14 +51,14 @@ export default {
             message: "退出成功"
           });
           this.$router.push("/");
-        } else if (command == "changePassword") {
-          this.$router.push("/changePassword");
         } else {
           this.$message({
             type: "error",
             message: res.msg
           });
         }
+      } else if (command == "changePassword") {
+        this.$router.push("/changePassword");
       }
     }
   }
@@ -73,7 +73,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 20px;
+  padding: 0 20px;
 }
 .avator {
   .wh(36px, 36px);

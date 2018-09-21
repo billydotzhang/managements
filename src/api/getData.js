@@ -96,6 +96,13 @@ export const customerStatus = data => fetch('/customerService/update/customerSta
 export const customerFind = data => fetch('/customerService/find', data);
 
 
+/**
+ * 异常数据搜索
+ */
+
+export const changePwd = data => fetch('/users/sysUser/password/update', data);
+
+
 
 
 

@@ -3,11 +3,11 @@
     <head-top></head-top>
     <div class="search_box">
       <div class="search_box_1">
-        <el-input v-model="searchInpt" placeholder="请输入内容"></el-input>
+        <el-input v-model="searchInpt" placeholder="请输入内容" clearable></el-input>
         <el-button type="primary" @click="searchUser()" icon="el-icon-search" :loading="searchLoading" plain>搜索</el-button>
       </div>
       <div class="search_box_1">
-        <el-select v-model="thousandPlanStatusValue" placeholder="请选择" @change="changeThousandPlanStatusValue()" clearable>
+        <el-select v-model="thousandPlanStatusValue" placeholder="请选择" @change="changeThousandPlanStatusValue()">
           <el-option v-for="item in thousandPlanStatus" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -59,7 +59,7 @@
         </el-table-column> -->
       </el-table>
       <div class="Pagination" style="text-align: left;margin-top: 10px;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="20" layout="total, prev, pager, next" :total="count">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="limit" layout="total, prev, pager, next" :total="count">
         </el-pagination>
       </div>
     </div>
@@ -128,13 +128,16 @@ export default {
         }
       ],
       count: 0,
-      offset: 1,
       limit: 20,
       currentPage: 1,
       searchInpt: "",
       searchLoading: false,
       tableloading: true,
       thousandPlanStatus: [
+        {
+          value: "",
+          label: "全部"
+        },
         {
           value: "0",
           label: "已参加"
@@ -144,7 +147,7 @@ export default {
           label: "未参加"
         }
       ],
-      thousandPlanStatusValue: "0",
+      thousandPlanStatusValue: "",
       customerHandleDialog: false,
       customerHandleRadio: "1",
       customerHandleDialogData: ""
@@ -162,14 +165,18 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.offset = val;
-      this.getUnusualInfo();
+      if (this.searchInpt !== "") {
+        const page = "1";
+        this.searchUser(page);
+      } else {
+        this.getUnusualInfo();
+      }
     },
     async getUnusualInfo() {
       this.tableloading = true;
       const Users = await getUnusualInfo({
         pageSize: this.limit,
-        pageNo: this.offset,
+        pageNo: this.currentPage,
         thousandPlanStatus: this.thousandPlanStatusValue
       });
       this.tableloading = false;
@@ -217,7 +224,6 @@ export default {
       }
     },
     customerHandle(data) {
-      console.log(data);
       this.customerHandleRadio = data.customerServiceHandle;
       this.customerHandleDialogData = data;
       this.customerHandleDialog = true;
@@ -277,16 +283,17 @@ export default {
       return formatDateTime(row.detectionTime);
     },
     thousandStatus(value, row) {
-      console.log(value);
-      console.log(row.status);
       return row.status == value;
     },
-    async searchUser() {
+    async searchUser(page) {
+      if (page !== "1") {
+        this.currentPage = 1;
+      }
       this.searchLoading = true;
       this.tableloading = true;
       const searchUserInfo = await customerFind({
         pageSize: this.limit,
-        pageNo: this.offset,
+        pageNo: this.currentPage,
         key: this.searchInpt
       });
       this.searchLoading = false;
