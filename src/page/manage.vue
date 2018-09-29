@@ -10,6 +10,7 @@
               <i class="el-icon-document"></i>数据管理</template>
             <el-menu-item index="userList">用户列表</el-menu-item>
             <el-menu-item index="serviceList">异常数据</el-menu-item>
+            <el-menu-item index="sendMsg">发送消息</el-menu-item>
             <!-- <el-menu-item index="foodList">食品列表</el-menu-item>
             <el-menu-item index="orderList">订单列表</el-menu-item>
             <el-menu-item index="adminList">管理员列表</el-menu-item> -->

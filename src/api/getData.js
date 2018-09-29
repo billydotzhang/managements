@@ -102,6 +102,33 @@ export const customerFind = data => fetch('/customerService/find', data);
 
 export const changePwd = data => fetch('/users/sysUser/password/update', data);
 
+/**
+ * 发送友盟推送
+ */
+
+export const sendUMsg = data => fetch('/informationPush/youmengPush', data, "POST");
+
+/**
+ * 获取短信模板
+ */
+
+export const fetchGetSMSTemplate = data => fetch('/informationPush/findAllMessageTemplate', data);
+
+/**
+ * 发送短信
+ */
+
+export const fetchSendSMS = data => fetch('/informationPush/sendMessage', data, "POST");
+
+/**
+ * 新建短信模板
+ */
+
+export const fetchNewSMSTemplate = data => fetch('/informationPush/saveMessageTemplate ', data, "POST");
+
+
+export const fetchDeleteSMSTemplate = data => fetch('/informationPush/updatMessageTemplates  ', data, "POST");
+
 
 
 

@@ -9,6 +9,7 @@ const userList = r => require.ensure([], () => r(require('@/page/userList')), 'u
 const serviceList = r => require.ensure([], () => r(require('@/page/serviceList')), 'serviceList');
 const pregnancyEcharts = r => require.ensure([], () => r(require('@/page/pregnancyEcharts')), 'pregnancyEcharts');
 const changePassword = r => require.ensure([], () => r(require('@/page/changePassword')), 'changePassword');
+const sendMsg = r => require.ensure([], () => r(require('@/page/sendMsg')), 'sendMsg');
 const test = r => require.ensure([], () => r(require('@/page/test')), 'test');
 
 export default new Router({
@@ -33,6 +34,11 @@ export default new Router({
         path: '/pregnancyEcharts',
         component: pregnancyEcharts,
         meta: ['数据管理', '折线图']
+      },
+      {
+        path: '/sendMsg',
+        component: sendMsg,
+        meta: ['数据管理', '发送消息']
       },
       {
         path: '/changePassword',

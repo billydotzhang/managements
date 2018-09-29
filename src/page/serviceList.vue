@@ -45,6 +45,7 @@
         <el-table-column property="city" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click="goGraph(scope.row)" type="text" size="small">早晚</el-button>
+            <el-button @click="sendMsg(scope.row)" type="text" size="small">发送</el-button>
           </template>
         </el-table-column>
         <!-- <el-table-column property="city" label="历史记录" align="center">
@@ -63,6 +64,26 @@
         </el-pagination>
       </div>
     </div>
+
+    <el-dialog title="发送消息" :visible.sync="sendMsgBox" width="50%" center>
+      <div class="sendMagin">
+        <el-form :model="sendMsgData" label-position="left">
+          <el-form-item label="用户名">
+            小福蝶
+          </el-form-item>
+          <el-form-item label="名称">
+            <el-input v-model="sendMsgData.msgConstent"></el-input>
+          </el-form-item>
+          <el-form-item label="消息内容">
+            <el-input type="text" v-model="sendMsgData.msgConstent"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="sendMsgBox = false">取 消</el-button>
+        <el-button type="primary" @click="doCustomerHandleRadio">发 送</el-button>
+      </span>
+    </el-dialog>
 
     <el-dialog title="修改状态" :visible.sync="customerHandleDialog" width="40%" center>
       <p>
@@ -149,8 +170,16 @@ export default {
       ],
       thousandPlanStatusValue: "",
       customerHandleDialog: false,
+      //默认选择
       customerHandleRadio: "1",
-      customerHandleDialogData: ""
+      customerHandleDialogData: "",
+
+      //发送消息
+      sendMsgBox: false,
+      sendMsgData: {
+        userId: "",
+        msgConstent: ""
+      }
     };
   },
   components: {
@@ -318,6 +347,17 @@ export default {
     },
     changeThousandPlanStatusValue() {
       this.getUnusualInfo();
+    },
+    sendMsg(data) {
+      this.$router.push({
+        path: "sendMsg",
+        query: { userId: data.physiologicalDataId, userName: data.userName }
+      });
+    }
+  },
+  watch: {
+    $route() {
+      this.getUnusualInfo();
     }
   }
 };
@@ -337,5 +377,9 @@ export default {
   display: flex;
   flex: 1;
   padding: 0 10px;
+}
+.sendMagin {
+  width: 400px;
+  margin: 0 auto;
 }
 </style>
